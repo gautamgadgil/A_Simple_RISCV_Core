@@ -1,0 +1,11 @@
+# Simulation files
+*.vcd
+*.fst
+*.out
+
+# Synthesis/Build files
+*.fs
+*.json
+*.bit
+*.bin
+obj_dir/
