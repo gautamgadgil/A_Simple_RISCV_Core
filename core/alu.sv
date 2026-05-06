@@ -17,6 +17,8 @@ localparam SRA  = 4'd8;
 localparam SLT  = 4'd9;
 localparam SLTU = 4'd10;
 
+wire [4:0] shamt = op_b[4:0];       // For iverilog
+
 always_comb begin
     case (ctrl)
         ADD: begin
@@ -35,13 +37,13 @@ always_comb begin
             result = op_a ^ op_b;
         end
         SLL: begin
-            result = op_a << op_b [4:0];
+            result = op_a << shamt;
         end
         SRL: begin
-            result = op_a >> op_b [4:0];
+            result = op_a >> shamt;
         end
         SRA: begin
-            result = $signed(op_a) >>> $signed(op_b [4:0]);
+            result = $signed(op_a) >>> $signed(shamt);
         end
         SLT: begin
             if ($signed(op_a) < $signed(op_b)) begin

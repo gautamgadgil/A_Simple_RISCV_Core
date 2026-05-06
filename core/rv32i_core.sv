@@ -31,11 +31,14 @@ wire [31:0] raw_target_wire  = target_base_wire + imm_out_wire;
 // JAL and Branches are naturally aligned because their immediates end in 0
 assign branch_target_wire = jalr_wire ? (raw_target_wire & 32'hFFFFFFFE) : raw_target_wire;
 
+
+wire [2:0] branch_func3 = instr_data[14:12];                                    // For iverilog
+
 // Check branch condition
 always_comb begin
     branch_taken = 1'b0; // Default branch not taken
     if (branch_wire) begin
-        case (instr_data[14:12])
+        case (branch_func3)
             3'b000: branch_taken = alu_zero_wire;    // BEQ
             3'b001: branch_taken = ~alu_zero_wire;   // BNE
             default: branch_taken = 1'b0;

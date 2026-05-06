@@ -6,8 +6,8 @@ module RegisterFile(
     input   [31:0]   wb_data,             // Write back port
     input   [4:0]    rs1_addr,            // Read port 1 address
     output  [31:0]   rs1_data,            // Read port 1
-    input   [4:0]    rs2_addr,             // Read port 2 address
-    output  [31:0]   rs2_data,            // Read port 2
+    input   [4:0]    rs2_addr,            // Read port 2 address
+    output  [31:0]   rs2_data             // Read port 2
 );
 
 logic [31:0] RegFile [0:31];              // RegFile array

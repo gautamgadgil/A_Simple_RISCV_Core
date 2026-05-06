@@ -14,6 +14,9 @@ module InstrDecode(
     output     logic                 mem_to_reg
 );
 
+wire logic [6:0] opcode;
+wire logic [9:0] func3_func7;
+
 wire logic [31:0] imm_i, imm_b, imm_j, imm_s;
 
 assign opcode           = instruction [6:0];
@@ -28,6 +31,9 @@ assign imm_i = { {20{instruction[31]}}, instruction[31:20] };
 assign imm_b = { {20{instruction[31]}}, instruction[7], instruction[30:25], instruction[11:8], 1'b0 };
 assign imm_j = { {12{instruction[31]}}, instruction[19:12], instruction[20], instruction[30:21], 1'b0 };
 assign imm_s = { {20{instruction[31]}}, instruction[31:25], instruction[11:7] };
+
+wire [2:0] func3 = instruction[14:12];                          // For iverilog
+wire [6:0] func7 = instruction[31:25];                          // For iverilog
 
 always_comb begin
     branch      = 1'b0;
@@ -96,12 +102,12 @@ always_comb begin
             alu_src = 1;
             we      = 1'b1;
             imm_out = imm_i; 
-            case (instruction [14:12])
+            case (func3)
                 3'b000: begin
                     alu_ctrl = 4'd1;        // Add
                 end
                 3'b001: begin
-                    if (instruction [31:25] == 7'b0) begin
+                    if (func7 == 7'b0) begin
                         alu_ctrl = 4'd6;        // SLL
                     end
                     else begin
@@ -118,10 +124,10 @@ always_comb begin
                     alu_ctrl = 4'd5;        // XOR
                 end
                 3'b101: begin
-                    if (instruction [31:25] == 7'b0) begin
+                    if (func7 == 7'b0) begin
                         alu_ctrl = 4'd7;        // SRL
                     end
-                    else if (instruction [31:25] == 7'b0100000) begin
+                    else if (func7 == 7'b0100000) begin
                         alu_ctrl = 4'd8;        // SRA
                     end
                     else begin
