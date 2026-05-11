@@ -1,6 +1,8 @@
 module riscv_3_stage_top(
     input                       clk,
-    input                       reset
+    input                       reset,
+
+    output logic    [5:0]       leds                // LED output for testing on the Tang Nano 20k
 );
 
 wire [31:0] instr_addr_wire, instr_data_wire;
@@ -41,5 +43,15 @@ rv32i_core u_rv32i_core (
     .dmem_addr(dmem_addr_wire),
     .dmem_wdata(dmem_wdata_wire)
 );
+
+// Memory mapped I/O for the Tang Nano 20k
+always_ff @(posedge clk) begin
+    if (reset) begin
+        leds <= 6'b111111;                      // Turn off all LEDs at reset
+    end
+    else if (dmem_we_wire && dmem_addr_wire == 32'h00000000) begin
+        leds <= ~dmem_wdata_wire[5:0];          // LEDs are last 6 bits of data written to address 0
+    end
+end
 
 endmodule

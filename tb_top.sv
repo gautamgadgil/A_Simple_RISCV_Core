@@ -4,11 +4,13 @@ module tb_top;
     // Simulation Signals
     logic clk;
     logic reset;
+    wire [5:0] leds_wire;
 
     // Instantiate wrapper
     riscv_3_stage_top u_dut (
         .clk(clk),
-        .reset(reset)
+        .reset(reset),
+        .leds(leds_wire)
     );
 
     // Clock Generation: 50 MHz (20ns period)
